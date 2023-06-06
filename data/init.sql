@@ -1,0 +1,35 @@
+CREATE DATABASE shop;
+use shop;
+-- TODO:pay attention to number of bytes in the numeric values
+
+CREATE TABLE book (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    sku VARCHAR(30) NOT NULL UNIQUE,
+    `name` VARCHAR(30) NOT NULL,
+    price FLOAT(7,2) NOT NULL,
+    `weight` DECIMAL(5,2) NOT NULL
+);
+
+CREATE TABLE dvd (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    sku VARCHAR(30) NOT NULL UNIQUE,
+    `name` VARCHAR(30) NOT NULL,
+    price FLOAT(7,2) NOT NULL,
+    size SMALLINT UNSIGNED NOT NULL
+);
+
+CREATE TABLE furniture (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    sku VARCHAR(30) NOT NULL UNIQUE,
+    `name` VARCHAR(30) NOT NULL,
+    price FLOAT(10,2) NOT NULL,
+    height SMALLINT UNSIGNED NOT NULL,
+    width SMALLINT UNSIGNED NOT NULL,
+    `length` SMALLINT UNSIGNED NOT NULL
+);
+
+
+
+
+
+
