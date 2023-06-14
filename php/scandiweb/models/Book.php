@@ -1,6 +1,7 @@
 <?php
+namespace scandiweb\models;
 
-namespace Scandiweb\Models;
+use scandiweb\helpers\Database;
 
 class Book extends Product
 {
@@ -13,7 +14,7 @@ class Book extends Product
         $this->weight = $weight;
     }
 
-    public function save($db)
+    public function save(Database $db)
     {
         $vals = get_object_vars($this);
         unset($vals['id']);
@@ -21,7 +22,7 @@ class Book extends Product
         return $db->insert('book', $vals);
     }
 
-    public static function getById($db,int $id)
+    public static function getById(Database $db,int $id)
     {
         $records = $db->select('book', $id);
 
@@ -33,11 +34,11 @@ class Book extends Product
         return new Book(...$record);
     }
 
-    public static function update($db, $id, $newVals){
+    public static function update(Database $db, $id, $newVals){
         return $db->update('book', $id, $newVals);
     }
 
-    public function delete($db)
+    public function delete(Database $db)
     {
         return $db->delete('book', [$this->id]);
     }

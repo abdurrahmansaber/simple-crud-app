@@ -1,18 +1,19 @@
 <?php
+namespace scandiweb\models;
 
-namespace Scandiweb\Models;
+use scandiweb\helpers\Database; 
 
-class Dvd extends Product
+class DVD extends Product
 {
     private $size;
 
-    public function __construct($sku, $name, $price, $type, $size)
+    public function __construct($sku, $name, $price, $size, $id=null)
     {
-        parent::__construct($sku, $name, $price, $type);
-        $this->$size = $size;
+        parent::__construct($sku, $name, $price, $id);
+        $this->size = $size;
     }
 
-    public function save(\Scandiweb\Helpers\Database $db)
+    public function save(Database $db)
     {
         $vals = get_object_vars($this);
         unset($vals['id']);
@@ -20,7 +21,7 @@ class Dvd extends Product
         return $db->insert('dvd', $vals);
     } 
 
-    public static function getById(\Scandiweb\Helpers\Database $db, $id)
+    public static function getById(Database $db, $id)
     {
         $records = $db->select('dvd', $id);
 
@@ -32,11 +33,11 @@ class Dvd extends Product
         return new Dvd(...$record);
     } 
 
-    public static function update($db, $id, $newVals){
+    public static function update(Database $db, $id, $newVals){
         return $db->update('dvd', $id, $newVals);
     }
 
-    public function delete(\Scandiweb\Helpers\Database $db)
+    public function delete(Database $db)
     {
         return $db->delete('dvd', [$this->id]);
 

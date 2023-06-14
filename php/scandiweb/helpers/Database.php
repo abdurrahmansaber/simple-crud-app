@@ -1,14 +1,14 @@
 <?php
-
-namespace Scandiweb\Helpers;
+namespace scandiweb\helpers;
 
 class Database
 {
     private static $instance;
     private $connection;
 
-    private function __construct(){
-        require dirname(__FILE__) . "/../../config/db_config.php";
+    private function __construct()
+    {
+        require __DIR__ . "/../../../config/db_config.php";
 
         try {
             $this->connection = new \PDO($dsn, $username, '', $options);
@@ -19,14 +19,16 @@ class Database
         }
     }
 
-    public static function getInstance(){
+    public static function getInstance()
+    {
         if (!isset(self::$instance)) {
             self::$instance = new Database();
         }
         return self::$instance;
     }
 
-    public function insert($table, $valsList){
+    public function insert($table, $valsList)
+    {
         try {
             $dbObject = Database::getInstance();
 
@@ -41,9 +43,8 @@ class Database
                 $insertStmt->bindValue(":$key", $value);
             }
 
-            $insertStmt->execute();            
+            $insertStmt->execute();
             return (int)($dbObject->connection->lastInsertId());
-
         } catch (\PDOException $e) {
 
             $errorMessage = 'Error executing SQL query: ' . $e->getMessage();
@@ -54,7 +55,8 @@ class Database
         }
     }
 
-    public function select($table, $id = false){
+    public function select($table, $id = false)
+    {
         try {
             $dbObject = Database::getInstance();
 
@@ -65,10 +67,10 @@ class Database
 
             $selectStmt = $dbObject->connection->prepare($sql);
             $selectStmt->execute();
-            $record = $selectStmt->fetchAll(mode: \PDO::FETCH_ASSOC);
+            $records = $selectStmt->fetchAll(mode: \PDO::FETCH_ASSOC);
             $selectStmt->closeCursor();
-           
-            return $record;
+
+            return $records;
         } catch (\PDOException $e) {
 
             $errorMessage = 'Error executing SQL query: ' . $e->getMessage();
@@ -79,7 +81,8 @@ class Database
         }
     }
 
-    public function update(string $table, int $id, array $newVals){
+    public function update(string $table, int $id, array $newVals)
+    {
         try {
             if (key_exists('id', $newVals))
                 unset($newVals['id']);
@@ -89,7 +92,7 @@ class Database
 
             $dbObject = Database::getInstance();
             $placeholders = "";
-            
+
             foreach (array_keys($newVals) as $key) {
                 $placeholders .= "$key = :$key, ";
             }
@@ -116,14 +119,15 @@ class Database
         }
     }
 
-    public static function delete(string $table, array $ids){
-        try{
+    public static function delete(string $table, array $ids)
+    {
+        try {
             $dbObject = Database::getInstance();
             $sql = sprintf("DELETE FROM %s WHERE id in (%s)", $table, join(", ", $ids));
             $deleteStmt = $dbObject->connection->prepare($sql);
             $deleteStmt->execute();
             return $deleteStmt->rowCount();
-        }catch (\PDOException $e) {
+        } catch (\PDOException $e) {
             $errorMessage = 'Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
             throw new \Exception($errorMessage);
@@ -131,4 +135,3 @@ class Database
         }
     }
 }
-
