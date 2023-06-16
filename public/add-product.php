@@ -2,28 +2,28 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require_once __DIR__ . '/../config/Config.php';
+
 spl_autoload_register(function ($class) {
     $class = str_replace('\\', '/', $class);
     require_once __DIR__ . '/../php/' . $class . '.php';
 });
 
 use scandiweb\helpers\Database;
-use scandiweb\models\Book;
-use scandiweb\models\DVD;
-use scandiweb\models\Furniture;
+use scandiweb\helpers\Factory;
+use \Exception;
 
-$db = Database::getInstance();
+$config = scandiweb\config\getDatabaseConfig();
+$db = Database::getInstance($config['dsn'], $config['username'], $config['password'], $config['options']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($_POST["type"] === 'book') {
-        $newBook = new Book($_POST["sku"], $_POST["name"], $_POST["price"], $_POST["weight"]);
-        $newBook->save($db);
-    } else if ($_POST["type"] === 'dvd') {
-        $newDvd = new DVD($_POST["sku"], $_POST["name"], $_POST["price"], $_POST["size"]);
-        $newDvd->save($db);
-    } else if ($_POST["type"] === 'furniture') {
-        $newFurniture = new Furniture($_POST["sku"], $_POST["name"], $_POST["price"], $_POST["height"], $_POST["width"], $_POST["length"]);
-        $newFurniture->save($db);
+    try {
+        $product = Factory::createProduct($_POST['type'], $_POST);
+        $product->save($db);
+    } catch (Exception $e) {
+        $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error adding product: ' . $e->getMessage();
+        error_log($errorMessage);
+        throw new Exception($errorMessage);
     }
     header('Location: index.php');
     die();

@@ -1,7 +1,9 @@
 <?php
+
 namespace scandiweb\models;
 
-use scandiweb\helpers\Database; 
+use scandiweb\helpers\Database;
+use \Exception;
 
 class Furniture extends Product
 {
@@ -9,7 +11,7 @@ class Furniture extends Product
     private $width;
     private $length;
 
-    public function __construct($sku, $name, $price, $height, $width, $length, $id=null)
+    public function __construct(string $sku, string $name, float $price, float $height, float $width, float $length, ?int $id = null)
     {
         parent::__construct($sku, $name, $price, $id);
         $this->height = $height;
@@ -25,7 +27,7 @@ class Furniture extends Product
         return $db->insert('furniture', $vals);
     }
 
-    public static function getById(Database $db, $id)
+    public static function getById(Database $db, int $id)
     {
         $records = $db->select('furniture', $id);
 
@@ -37,7 +39,7 @@ class Furniture extends Product
         return new Furniture(...$record);
     }
 
-    public static function update(Database $db, $id, $newVals)
+    public static function update(Database $db, int $id, array $newVals)
     {
         return $db->update('furniture', $id, $newVals);
     }
@@ -45,6 +47,15 @@ class Furniture extends Product
     public function delete(Database $db)
     {
         return $db->delete('furniture', [$this->id]);
+    }
+
+    public static function deleteByIds(Database $db, array $ids)
+    {
+        if (!empty($ids)) {
+            return $db->delete('furniture', $ids);
+        } else {
+            throw new Exception("Invalid ids input.");
+        }
     }
 
     public function getHeight()

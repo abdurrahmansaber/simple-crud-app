@@ -1,13 +1,14 @@
 <?php
 namespace scandiweb\models;
 
-use scandiweb\helpers\Database; 
+use scandiweb\helpers\Database;
+use \Exception; 
 
 class DVD extends Product
 {
     private $size;
 
-    public function __construct($sku, $name, $price, $size, $id=null)
+    public function __construct(string $sku, string $name, float $price, int $size, ?int $id=null)
     {
         parent::__construct($sku, $name, $price, $id);
         $this->size = $size;
@@ -21,7 +22,7 @@ class DVD extends Product
         return $db->insert('dvd', $vals);
     } 
 
-    public static function getById(Database $db, $id)
+    public static function getById(Database $db, int $id)
     {
         $records = $db->select('dvd', $id);
 
@@ -30,10 +31,18 @@ class DVD extends Product
 
         $record = $records[0];
         
-        return new Dvd(...$record);
+        return new DVD(...$record);
     } 
 
-    public static function update(Database $db, $id, $newVals){
+    public static function deleteByIds(Database $db, array $ids){
+        if (!empty($ids) && is_array($ids)){
+            return $db->delete('dvd', $ids);
+        }else{
+            throw new Exception("Invalid ids input.");
+        }
+    }
+
+    public static function update(Database $db, int $id, array $newVals){
         return $db->update('dvd', $id, $newVals);
     }
 

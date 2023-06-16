@@ -13,7 +13,7 @@ abstract class Product
     protected $name;
     protected $price;
 
-    public function __construct($sku, $name, $price, $id)
+    public function __construct(string $sku, string $name, float $price, ?int $id=null)
     {
         $this->sku = $sku;
         $this->name = $name;
@@ -24,6 +24,7 @@ abstract class Product
     abstract public function save(Database $db);
     abstract public static function getById(Database $db, int $id);
     abstract public function delete(Database $db);
+    abstract public static function deleteByIds(Database $db, array $ids);
 
     public static function getAllProducts(Database $db)
     {
@@ -36,6 +37,10 @@ abstract class Product
             'dvd' => $dvds,
             'furniture' => $furniture
         );
+    }
+
+    public static function deleteProducts(Database $db, array $idTypePairs){
+
     }
 
     public function getId()

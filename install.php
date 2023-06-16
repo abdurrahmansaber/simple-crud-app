@@ -8,7 +8,7 @@ try {
     $connection->exec($sql);
     echo "Database Created..." . "<br>";
 } catch (PDOException $error) {
-    $errorMessage = "Database Error: " . $error->getMessage();
+    $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
     error_log($errorMessage);
     throw new Exception($errorMessage);
 }

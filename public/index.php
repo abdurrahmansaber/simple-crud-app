@@ -2,16 +2,20 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require_once __DIR__ . '/../config/Config.php';
+
 spl_autoload_register(function ($class) {
     $class = str_replace('\\', '/', $class);
     require_once __DIR__ . '/../php/' . $class . '.php';
 });
 
-
 use scandiweb\helpers\Database;
 use scandiweb\models\Product;
 
-$db = Database::getInstance();
+$config = scandiweb\config\getDatabaseConfig();
+
+$db = Database::getInstance($config['dsn'], $config['username'], $config['password'], $config['options']);
+
 $productCatgories = Product::getAllProducts($db);
 $productsCount = count($productCatgories, 1);
 
@@ -31,15 +35,18 @@ $productsCount = count($productCatgories, 1);
         <h1>Products List</h1>
         <nav>
             <button id="add-product-btn">ADD</button>
-            <button id="delete-product-btn">MASS DELETE</button>
+            <form id="delete-form" action="delete.php" method="POST">
+                <button type="submit" id="delete-product-btn">MASS DELETE</button>
+            </form>
         </nav>
     </header>
     <div class="grid-container" id="container">
         <?php if ($productsCount > 3) : ?>
             <?php foreach ($productCatgories as $categName => $products) : ?>
                 <?php foreach ($products as $product) : ?>
-                    <div class="grid-item clickable-div" data-id=<?php echo "{$product->getId()}"?> data-type=<?php echo "$categName"?>>
+                    <div class="grid-item clickable-div" data-id=<?php echo "{$product->getId()}" ?> data-type=<?php echo "$categName" ?>>
                         <h3><?php echo $product->getSku(); ?></h3>
+                        <input type="checkbox" class="delete-checkbox" name="product[]" form="delete-form" value="<?php echo "{$product->getId()}:{$categName}" ?>"/>
                         <p><?php echo $product->getName(); ?></p>
                         <p>Price: $<?php echo $product->getPrice(); ?></p>
                         <p>

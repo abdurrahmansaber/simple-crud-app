@@ -1,6 +1,7 @@
 <?php
 namespace scandiweb\models;
 
+use \Exception;
 use scandiweb\helpers\Database;
 
 class Book extends Product
@@ -8,7 +9,7 @@ class Book extends Product
 
     private $weight;
 
-    public function __construct($sku, $name, $price, $weight, $id = null)
+    public function __construct(string $sku, string $name, float $price, float $weight, ?int $id=null)
     {
         parent::__construct($sku, $name, $price, $id);
         $this->weight = $weight;
@@ -34,8 +35,16 @@ class Book extends Product
         return new Book(...$record);
     }
 
-    public static function update(Database $db, $id, $newVals){
+    public static function update(Database $db, int $id, array $newVals){
         return $db->update('book', $id, $newVals);
+    }
+
+    public static function deleteByIds(Database $db, array $ids){
+        if (!empty($ids) && is_array($ids)){
+            return $db->delete('book', $ids);
+        }else{
+            throw new Exception("Invalid ids input.");
+        }
     }
 
     public function delete(Database $db)
