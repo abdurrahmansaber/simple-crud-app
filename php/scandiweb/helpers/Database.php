@@ -25,7 +25,7 @@ class Database
             } catch (PDOException $e) {
                 $errorMessage = '[' . date('Y-m-d H:i:s') . '] Database connection failed: ' . $e->getMessage();
                 error_log($errorMessage);
-                throw new Exception($errorMessage);
+                echo htmlspecialchars($errorMessage);
             }
         }
         return self::$instance;
@@ -54,7 +54,7 @@ class Database
 
             $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
-            throw new Exception($errorMessage);
+            echo htmlspecialchars($errorMessage);
         }
     }
 
@@ -80,7 +80,6 @@ class Database
 
             $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
-            throw new Exception($errorMessage);
         }
     }
 
@@ -119,7 +118,7 @@ class Database
 
             $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
-            throw new Exception($errorMessage);
+            echo htmlspecialchars($errorMessage);
         }
     }
 
@@ -135,7 +134,7 @@ class Database
         } catch (PDOException $e) {
             $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
-            throw new Exception($errorMessage);
+            echo htmlspecialchars($errorMessage);
         }
     }
 

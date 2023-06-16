@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product'])) {
 
     if (isset($products['furniture']))
         Furniture::deleteByIds($db, $products['furniture']);
-
-    header("Location: index.php");
-    exit();
 }
+header("Location: index.php");
+exit();

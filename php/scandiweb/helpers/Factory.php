@@ -12,7 +12,7 @@ class Factory
     public static function createProduct(string $type, array $data): Product
     {
         if (!self::array_keys_exists(['sku', 'name', 'price'], $data))
-            throw new InvalidArgumentException('Invalid form input for a product');
+            echo htmlspecialchars('Invalid form input for a product');
 
         $product = null;
 
@@ -33,7 +33,7 @@ class Factory
                 break;
 
             default:
-                throw new InvalidArgumentException('Invalid product type');
+                echo htmlspecialchars('Invalid product type');
         }
 
         return $product;

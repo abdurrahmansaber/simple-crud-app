@@ -38,7 +38,7 @@ class DVD extends Product
         if (!empty($ids) && is_array($ids)){
             return $db->delete('dvd', $ids);
         }else{
-            throw new Exception("Invalid ids input.");
+            echo htmlspecialchars("Invalid ids input.");
         }
     }
 

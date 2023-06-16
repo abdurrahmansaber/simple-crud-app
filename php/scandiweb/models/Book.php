@@ -43,7 +43,7 @@ class Book extends Product
         if (!empty($ids) && is_array($ids)){
             return $db->delete('book', $ids);
         }else{
-            throw new Exception("Invalid ids input.");
+            echo htmlspecialchars("Invalid ids input.");
         }
     }
 
