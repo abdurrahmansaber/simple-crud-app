@@ -1,7 +1,6 @@
 <?php
 namespace scandiweb\models;
 
-use \Exception;
 use scandiweb\helpers\Database;
 
 class Book extends Product
@@ -19,7 +18,8 @@ class Book extends Product
     {
         $vals = get_object_vars($this);
         unset($vals['id']);
-
+        unset($vals['description']);
+        
         return $db->insert('book', $vals);
     }
 
@@ -55,5 +55,9 @@ class Book extends Product
     public function getWeight()
     {
         return $this->weight;
+    }
+
+    public function getDescription(){
+        return 'Weight: ' . $this->getWeight() . ' KG';
     }
 }

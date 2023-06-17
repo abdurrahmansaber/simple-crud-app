@@ -51,7 +51,7 @@ class Database
             $insertStmt->execute();
             return (int)($this->connection->lastInsertId());
         } catch (PDOException $e) {
-
+            $this->connection->rollBack();
             $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
             echo htmlspecialchars($errorMessage);
@@ -77,7 +77,7 @@ class Database
 
             return $records;
         } catch (PDOException $e) {
-
+            
             $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
         }
@@ -132,6 +132,7 @@ class Database
             $deleteStmt->execute();
             return $deleteStmt->rowCount();
         } catch (PDOException $e) {
+            $this->connection->rollBack();
             $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
             echo htmlspecialchars($errorMessage);

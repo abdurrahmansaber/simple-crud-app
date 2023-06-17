@@ -1,20 +1,14 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+require_once __DIR__ . '/../Utils.php';
 
-require_once __DIR__ . '/../config/Config.php';
+scandiweb\helpers\autoload();
 
-spl_autoload_register(function ($class) {
-    $class = str_replace('\\', '/', $class);
-    require_once __DIR__ . '/../php/' . $class . '.php';
-});
+$db = scandiweb\helpers\getDB();
 
-use scandiweb\helpers\Database;
 use scandiweb\helpers\Factory;
 use \Exception;
-
-$config = scandiweb\config\getDatabaseConfig();
-$db = Database::getInstance($config['dsn'], $config['username'], $config['password'], $config['options']);
 
 function sanitizeInput(string $input)
 {
@@ -51,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>Product Add</h1>
         <nav>
             <button form="product_form" formaction="add-product.php">Save</button>
-            <button id="cancel-add-btn">Cancel</button>
+            <a href="index.php"><button id="cancel-add-btn">Cancel</button></a>
         </nav>
     </header>
     <hr>
@@ -74,10 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div id="book-attrs">
                 <label for="weight">Weight (KG)</label>
                 <input name="weight" id="weight" type="number" step="0.01" min="0.01" max="99.99" required>
+                <strong>Please, provide weight</strong>
             </div>
             <div id="dvd-attrs" style="display: none;">
                 <label for="size">Size (MB)</label>
                 <input name="size" id="size" type="number" min="1" max="4000000000">
+                <strong>Please, provide size</strong>
             </div>
             <div id="furniture-attrs" style="display: none;">
                 <label for="height">Height (CM)</label>
@@ -86,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input name="width" id="width" type="number" step="0.01" min="1" max="1000">
                 <label for="length">Length (CM)</label>
                 <input name="length" id="length" type="number" step="0.01" min="1" max="1000">
+                <strong>Please, provide dimensions</strong>
             </div>
         </div>
     </form>

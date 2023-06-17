@@ -4,10 +4,6 @@ const dvdDiv = document.getElementById('dvd-attrs');
 const furnitureDiv = document.getElementById('furniture-attrs');
 const cancelAddBtn = document.getElementById('cancel-add-btn');
 
-cancelAddBtn.addEventListener('click', function () {
-    location.href = 'index.php';
-});
-
 function displayBookDiv() {
     bookDiv.style.display = 'block';
     dvdDiv.style.display = 'none';
@@ -60,21 +56,3 @@ productType.addEventListener('change', function () {
     showCorrectDiv();
 });
 
-function getParameterByName(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log(urlParams.get(name))
-    return urlParams.get(name);
-}
-
-function setInitialDisplayFromURLParam() {
-    const parameterValue = getParameterByName('type');
-    if (parameterValue) {
-        const option = productType.querySelector(`option[value="${parameterValue}"]`);
-        if (option) {
-            productType.value = parameterValue;
-            showCorrectDiv();
-        }
-    }
-}
-
-setInitialDisplayFromURLParam();

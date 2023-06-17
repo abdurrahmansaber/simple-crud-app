@@ -1,10 +1,11 @@
 <?php
+
 namespace scandiweb\models;
 
 use scandiweb\helpers\Database;
-use scandiweb\models\Book; 
-use scandiweb\models\DVD; 
-use scandiweb\models\Furniture; 
+use scandiweb\models\Book;
+use scandiweb\models\DVD;
+use scandiweb\models\Furniture;
 
 abstract class Product
 {
@@ -12,8 +13,9 @@ abstract class Product
     protected $id;
     protected $name;
     protected $price;
+    protected $description;
 
-    public function __construct(string $sku, string $name, float $price, ?int $id=null)
+    public function __construct(string $sku, string $name, float $price, ?int $id = null)
     {
         $this->sku = $sku;
         $this->name = $name;
@@ -25,22 +27,18 @@ abstract class Product
     abstract public static function getById(Database $db, int $id);
     abstract public function delete(Database $db);
     abstract public static function deleteByIds(Database $db, array $ids);
+    abstract public function getDescription();
 
     public static function getAllProducts(Database $db)
     {
         $books = array_map(fn ($vals) => new Book(...$vals), $db->select('book'));
         $dvds = array_map(fn ($vals) => new DVD(...$vals), $db->select('dvd'));
         $furniture = array_map(fn ($vals) => new Furniture(...$vals), $db->select('furniture'));
+        $products = array_merge($dvds, $furniture, $books,);
 
-        return array(
-            'book' => $books,
-            'dvd' => $dvds,
-            'furniture' => $furniture
-        );
-    }
+        usort($products, fn ($p1, $p2) => $p1->getId() < $p2->getId() ? -1 : 1);
 
-    public static function deleteProducts(Database $db, array $idTypePairs){
-
+        return $products;
     }
 
     public function getId()
@@ -62,4 +60,5 @@ abstract class Product
     {
         return $this->price;
     }
+    
 }

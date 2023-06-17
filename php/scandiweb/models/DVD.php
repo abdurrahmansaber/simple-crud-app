@@ -2,7 +2,6 @@
 namespace scandiweb\models;
 
 use scandiweb\helpers\Database;
-use \Exception; 
 
 class DVD extends Product
 {
@@ -18,6 +17,7 @@ class DVD extends Product
     {
         $vals = get_object_vars($this);
         unset($vals['id']);
+        unset($vals['description']);
 
         return $db->insert('dvd', $vals);
     } 
@@ -55,5 +55,9 @@ class DVD extends Product
     public function getSize()
     {
         return $this->size;
+    }
+
+    public function getDescription(){
+        return 'Size: ' . $this->getSize() . ' MB';
     }
 }

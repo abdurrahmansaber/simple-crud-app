@@ -1,22 +1,16 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+require_once __DIR__ . '/../Utils.php';
 
-require_once __DIR__ . '/../config/Config.php';
+scandiweb\helpers\autoload();
 
-spl_autoload_register(function ($class) {
-    $class = str_replace('\\', '/', $class);
-    require_once __DIR__ . '/../php/' . $class . '.php';
-});
+$db = scandiweb\helpers\getDB();
 
-use scandiweb\helpers\Database;
 use scandiweb\models\Book;
 use scandiweb\models\DVD;
 use scandiweb\models\Furniture;
 
-$config = scandiweb\config\getDatabaseConfig();
-
-$db = Database::getInstance($config['dsn'], $config['username'], $config['password'], $config['options']);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product'])) {
     $products = [];
     foreach ($_POST['product'] as $productInfo) {
@@ -36,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product'])) {
 
     if (isset($products['furniture']))
         Furniture::deleteByIds($db, $products['furniture']);
+    var_dump($products);
 }
 header("Location: index.php");
 exit();

@@ -23,6 +23,7 @@ class Furniture extends Product
     {
         $vals = get_object_vars($this);
         unset($vals['id']);
+        unset($vals['description']);
 
         return $db->insert('furniture', $vals);
     }
@@ -54,7 +55,7 @@ class Furniture extends Product
         if (!empty($ids)) {
             return $db->delete('furniture', $ids);
         } else {
-            throw new Exception("Invalid ids input.");
+            echo htmlspecialchars("Invalid ids input.");
         }
     }
 
@@ -72,4 +73,9 @@ class Furniture extends Product
     {
         return $this->length;
     }
+
+    public function getDescription(){
+        return 'Dimesions: ' . $this->getLength() . 'x' . $this->getWidth() . 'x' . $this->getHeight();
+    }
+
 }
