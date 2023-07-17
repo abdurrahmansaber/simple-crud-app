@@ -74,6 +74,27 @@ class Furniture extends Product
         return $this->length;
     }
 
+    public static function getAll(Database $db)
+    {
+        $table = 'furniture';
+        $records = $db->select($table);
+
+        $furniture = [];
+        foreach ($records as $record) {
+            $furniture[] = new self(
+                $record['sku'],
+                $record['name'],
+                (float) $record['price'],
+                (int) $record['height'],
+                (int) $record['width'],
+                (int) $record['length'],
+                (int) $record['id']
+            );
+        }
+
+        return $furniture;
+    }
+    
     public function getDescription(){
         return 'Dimesions: ' . $this->getLength() . 'x' . $this->getWidth() . 'x' . $this->getHeight();
     }

@@ -20,13 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         array_map('sanitizeInput', $_POST);
         $product = Factory::createProduct($_POST['type'], $_POST);
         $product->save($db);
+        header('Location: index.php');
+        exit();
     } catch (Exception $e) {
         $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error adding product: ' . $e->getMessage();
         error_log($errorMessage);
-        echo htmlspecialchars($errorMessage);
+        echo '<script>alert("Error inserting duplicate SKU");</script>';
     }
-    header('Location: index.php');
-    exit();
+    
 }
 
 ?>
@@ -56,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="name">Name</label>
             <input name="name" id="name" type="text" maxlength="30" minlength="1" required>
             <label for="price">Price (&dollar;)</label>
-            <input name="price" id="price" type="number" step="0.01" min="0.01" max="999999.99" required>
+            <input name="price" id="price" type="number" step="0.01" min="0.01" required>
             <label for="type">Type</label>
             <select name="type" id="productType" required>
                 <option id="Book" value="book">Book</option>
@@ -67,21 +68,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div id="additional-input">
             <div id="book-attrs">
                 <label for="weight">Weight (KG)</label>
-                <input name="weight" id="weight" type="number" step="0.01" min="0.01" max="99.99" required>
+                <input name="weight" id="weight" type="number" step="0.01" min="0.01" required>
                 <strong>Please, provide weight</strong>
             </div>
             <div id="dvd-attrs" style="display: none;">
                 <label for="size">Size (MB)</label>
-                <input name="size" id="size" type="number" min="1" max="4000000000">
+                <input name="size" id="size" type="number" min="1">
                 <strong>Please, provide size</strong>
             </div>
             <div id="furniture-attrs" style="display: none;">
                 <label for="height">Height (CM)</label>
-                <input name="height" id="height" type="number" step="0.01" min="1" max="1000">
+                <input name="height" id="height" type="number" step="0.01" min="1">
                 <label for="width">Width (CM)</label>
-                <input name="width" id="width" type="number" step="0.01" min="1" max="1000">
+                <input name="width" id="width" type="number" step="0.01" min="1">
                 <label for="length">Length (CM)</label>
-                <input name="length" id="length" type="number" step="0.01" min="1" max="1000">
+                <input name="length" id="length" type="number" step="0.01" min="1">
                 <strong>Please, provide dimensions</strong>
             </div>
         </div>

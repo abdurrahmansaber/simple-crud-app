@@ -31,11 +31,12 @@ abstract class Product
 
     public static function getAllProducts(Database $db)
     {
-        $books = array_map(fn ($vals) => new Book(...$vals), $db->select('book'));
-        $dvds = array_map(fn ($vals) => new DVD(...$vals), $db->select('dvd'));
-        $furniture = array_map(fn ($vals) => new Furniture(...$vals), $db->select('furniture'));
-        $products = array_merge($dvds, $furniture, $books,);
-
+        $categories = ['Book', 'DVD', 'Furniture'];
+        $products = [];
+        foreach ($categories as $category) {
+            $className = "scandiweb\\models\\$category";
+            $products = array_merge($products, $className::getAll($db));
+        }
         usort($products, fn ($p1, $p2) => $p1->getId() < $p2->getId() ? -1 : 1);
 
         return $products;

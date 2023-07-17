@@ -23,6 +23,25 @@ class Book extends Product
         return $db->insert('book', $vals);
     }
 
+    public static function getAll(Database $db)
+    {
+        $table = 'book';
+        $records = $db->select($table);
+
+        $books = [];
+        foreach ($records as $record) {
+            $books[] = new self(
+                $record['sku'],
+                $record['name'],
+                (float) $record['price'],
+                (float) $record['weight'],
+                (int) $record['id']
+            );
+        }
+
+        return $books;
+    }
+
     public static function getById(Database $db,int $id)
     {
         $records = $db->select('book', $id);

@@ -1,10 +1,12 @@
 <?php
+
 namespace scandiweb\helpers;
 
+use Exception;
 use \PDO;
 use \PDOException;
-use \Exception;
 use \InvalidArgumentException;
+use scandiweb\models\Product;
 
 class Database
 {
@@ -31,12 +33,21 @@ class Database
         return self::$instance;
     }
 
+    private function checkUniqueSku(string $sku)
+    {
+        $products = Product::getAllProducts(self::$instance);
+        foreach ($products as $product) {
+            if ($product->getSku() === $sku)
+                throw new Exception("Error inserting duplicate SKU");
+        }
+    }
+
     public function insert(string $table, array $valsList)
     {
         try {
             $this->validateTable($table);
             $this->validateValsList($valsList);
-
+            $this->checkUniqueSku($valsList['sku']);
             $columns = join(', ', array_keys($valsList));
             $placeholders = ':' . join(', :', array_keys($valsList));
 
@@ -51,14 +62,13 @@ class Database
             $insertStmt->execute();
             return (int)($this->connection->lastInsertId());
         } catch (PDOException $e) {
-            $this->connection->rollBack();
             $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
-            echo htmlspecialchars($errorMessage);
+            throw $e;
         }
     }
 
-    public function select(string $table, ?int $id=null)
+    public function select(string $table, ?int $id = null)
     {
         try {
             $this->validateTable($table);
@@ -77,7 +87,7 @@ class Database
 
             return $records;
         } catch (PDOException $e) {
-            
+
             $errorMessage = '[' . date('Y-m-d H:i:s') . '] Error executing SQL query: ' . $e->getMessage();
             error_log($errorMessage);
         }

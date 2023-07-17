@@ -34,6 +34,25 @@ class DVD extends Product
         return new DVD(...$record);
     } 
 
+    public static function getAll(Database $db)
+    {
+        $table = 'dvd';
+        $records = $db->select($table);
+
+        $dvds = [];
+        foreach ($records as $record) {
+            $dvds[] = new self(
+                $record['sku'],
+                $record['name'],
+                (float) $record['price'],
+                (int) $record['size'],
+                (int) $record['id']
+            );
+        }
+
+        return $dvds;
+    }
+
     public static function deleteByIds(Database $db, array $ids){
         if (!empty($ids) && is_array($ids)){
             return $db->delete('dvd', $ids);
